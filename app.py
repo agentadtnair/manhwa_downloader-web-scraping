@@ -13,8 +13,8 @@ from urllib.parse import urlparse
 
 app = Flask(__name__)
 
-BASE_DIR = "manhwa_project/static/manhwa"
-MANHWA_FOLDER = os.path.abspath("C:/scraping projects/manhwa_project/static/manhwa")
+BASE_DIR = "manhwa_project/static/manhwa" #add your base directory
+MANHWA_FOLDER = os.path.abspath("C:/scraping projects/manhwa_project/static/manhwa") #add your manhwa directory
 
 def create_driver():
     chrome_options = Options()
@@ -78,7 +78,7 @@ def get_file_extension(url):
     parsed_url = urlparse(url)
     ext = os.path.splitext(parsed_url.path)[1]  # Extract extension from URL path
     
-    # If no extension, try using the MIME type
+    
     if not ext:
         mime_type, _ = mimetypes.guess_type(url)
         ext = mimetypes.guess_extension(mime_type) if mime_type else ".jpg"  # Default to .jpg
