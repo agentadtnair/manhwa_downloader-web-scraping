@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manhwa List</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/48/cartoon-boy.png">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap");
+
+        :root {
+            --first-color: hsl(82, 60%, 50%);
+            /* Brighter accent color for dark theme */
+            --title-color: hsl(0, 0%, 95%);
+            /* Light text for dark theme */
+            --text-color: hsl(0, 0%, 80%);
+            /* Light text for dark theme */
+            --body-color: hsl(0, 0%, 10%);
+            /* Dark background */
+            --container-color: hsl(0, 0%, 15%);
+            /* Dark container background */
+            --body-font: "Poppins", sans-serif;
+            --h2-font-size: 1.25rem;
+            --small-font-size: .813rem;
+        }
+
+        @media screen and (min-width: 1120px) {
+            :root {
+                --h2-font-size: 1.5rem;
+                --small-font-size: .875rem;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            font-family: var(--body-font);
+            background-color: var(--body-color);
+            color: var(--text-color);
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .home-button {
+            position: absolute;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: var(--first-color);
+            color: var(--title-color);
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .home-button:hover {
+            background-color: hsl(82, 60%, 60%);
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--title-color);
+            text-align: center;
+        }
+
+        .container {
+            display: grid;
+            place-items: center;
+            margin-inline: 1.5rem;
+            padding-block: 2rem;
+        }
+
+        .card__container {
+            display: grid;
+            row-gap: 3.5rem;
+        }
+
+        .card__article {
+            position: relative;
+            overflow: hidden;
+            margin: 1rem;
+        }
+
+        .card__image {
+            width: 200px;
+            border-radius: 1rem;
+            transition: transform 0.3s ease;
+            /* Added transition for scaling */
+        }
+
+        .card__data {
+            width: 180px;
+            /* Decreased width of the pop-up box */
+            background-color: var(--container-color);
+            padding: 1rem 1.2rem;
+            box-shadow: 0 6px 20px hsla(0, 0%, 0%, .15);
+            border-radius: 0.8rem;
+            position: absolute;
+            bottom: -6rem;
+            left: 0;
+            right: 0;
+            margin-inline: auto;
+            opacity: 0;
+            transition: opacity 1s 1s, bottom 0.5s ease-out, transform 0.3s ease;
+            /* Added transform transition */
+        }
+
+        .card__description {
+            display: block;
+            font-size: var(--small-font-size);
+            margin-bottom: .25rem;
+        }
+
+        .card__title {
+            font-size: var(--h2-font-size);
+            font-weight: 500;
+            color: var(--title-color);
+            margin-bottom: .75rem;
+        }
+
+        .card__button {
+            text-decoration: none;
+            font-size: var(--small-font-size);
+            font-weight: 500;
+            color: var(--first-color);
+        }
+
+        .card__button:hover {
+            text-decoration: underline;
+        }
+
+        .card__article:hover .card__image {
+            transform: scale(1.1);
+            /* Slightly increase the size of the image on hover */
+        }
+
+        .card__article:hover .card__data {
+            bottom: 0;
+            opacity: 1;
+            transition: bottom 0.5s ease-out, opacity 0.5s ease-out, transform 0.3s ease;
+            /* Added transform transition */
+            transform: scale(0.9);
+            /* Slightly decrease the size of the pop-up box on hover */
+        }
+
+
+        @media screen and (max-width: 340px) {
+            .container {
+                margin-inline: 1rem;
+            }
+
+            .card__data {
+                width: 160px;
+                /* Adjusted for smaller screens */
+                padding: 0.8rem;
+            }
+        }
+
+        @media screen and (min-width: 768px) {
+            .card__container {
+                grid-template-columns: repeat(2, 1fr);
+                column-gap: 1.5rem;
+            }
+        }
+
+        @media screen and (min-width: 1120px) {
+            .container {
+                height: auto;
+                /* Changed from 100vh to auto */
+                padding-bottom: 8rem;
+                /* Added padding at the bottom */
+            }
+
+            .card__container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <button class="home-button" onclick="window.location.href='/'">Home</button>
+        <h1>Manhwa List</h1>
+    </div>
+    <div class="container">
+
+        <div class="card__container">
+            {% for manhwa in manhwas %}
+            <article class="card__article">
+                <img src="{{ url_for('static', filename='manhwa/' + manhwa + '/cover.jpg') }}"
+                    data-jpg="{{ url_for('static', filename='manhwa/' + manhwa + '/cover.jpg') }}"
+                    data-webp="{{ url_for('static', filename='manhwa/' + manhwa + '/cover.webp') }}"
+                    data-jpeg="{{ url_for('static', filename='manhwa/' + manhwa + '/cover.jpeg') }}"
+                    alt="{{ manhwa }} Cover" class="card__image">
+
+                <div class="card__data">
+                    <h2 class="card__title">{{ manhwa | replace('-', ' ') }}</h2>
+                    <a href="{{ url_for('view', manhwa_name=manhwa) }}" class="card__button">Read</a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        // Image fallback mechanism to check for .webp first, then .jpg
+        document.querySelectorAll('.card__image').forEach(img => {
+            const webpSrc = img.getAttribute('data-webp');
+            const jpgSrc = img.getAttribute('data-jpg');
+            const jpegSrc = img.getAttribute('data-jpeg');
+
+            if (webpSrc) {
+                const testImg = new Image();
+                testImg.src = webpSrc;
+
+                testImg.onload = function () {
+                    img.src = webpSrc; // Use WebP if it loads successfully
+                };
+                testImg.onerror = function () {
+                    if (jpgSrc) {
+                        img.src = jpgSrc; // Fallback to JPG if WebP fails
+                    } else if (jpegSrc) {
+                        img.src = jpegSrc; // Fallback to JPEG if JPG is unavailable
+                    }
+                };
+            } else if (jpgSrc) {
+                img.src = jpgSrc; // If WebP is not provided, use JPG
+            } else if (jpegSrc) {
+                img.src = jpegSrc; // If neither WebP nor JPG is available, use JPEG
+            }
+        });
+    
+    </script>
+    
+    
+</body>
+
+</html>

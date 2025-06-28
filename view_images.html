@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ manhwa_name.replace("-", " ").title() }} - {{ chapter_name.replace("-", " ").title() }}</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: white !important;
+            color: black !important;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+            text-align: left;
+        }
+
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .breadcrumb a {
+            text-decoration: none;
+            color: #1976D2;
+            font-weight: bold;
+        }
+
+        .breadcrumb span {
+            margin: 0 5px;
+        }
+
+        /* Chapter Navigation Dropdown */
+        .chapter-dropdown {
+            padding-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .chapter-select{
+            border: none;
+        }
+
+        select {
+            padding: 12px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #f9f9f9, #e0e0e0) !important;
+            color: black !important;
+            border-radius: 5px !important;
+            cursor: pointer !important;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        select:hover {
+            border: none ;
+            background: linear-gradient(135deg, #ffffff, #dcdcdc) !important;
+        }
+
+        .image-container{
+            padding-top: 20px;
+        }
+
+        /* Image Styling */
+        .image-container img {
+            width: 100%;
+            max-width: 850px;
+            display: block;
+            margin: 15px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .nav-buttons a {
+            text-decoration: none;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #2196F3, #1976D2) !important;
+            color: white !important;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: 0.3s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-buttons a:hover {
+            background: linear-gradient(135deg, #1976D2, #0D47A1) !important;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-buttons .disabled {
+            background: #ccc !important;
+            color: #666 !important;
+            font-weight: bold;
+            border-radius: 8px;
+            pointer-events: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>{{ manhwa_name.replace("-", " ").title() }} - {{ chapter_name.replace("-", " ").title() }}</h1>
+        
+        <div class="breadcrumb">
+            <a href="{{ url_for('home') }}">Home</a>
+            <span>/</span>
+            <a href="{{ url_for('view', manhwa_name=manhwa_name) }}">{{ manhwa_name.replace("-", " ").title() }}</a>
+            <span>/</span>
+            {{ chapter_name.replace("-", " ").title() }}
+        </div>
+
+        <!-- Dropdown for selecting chapters -->
+        <div class="chapter-dropdown">
+            <select id="chapter-select" onchange="navigateToChapter()" class="chapter-select">
+                {% for chapter in chapters %}
+                <option value="{{ chapter }}" {% if chapter == chapter_name %}selected{% endif %}>
+                    {{ chapter.replace("-", " ").title() }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Display images -->
+        <div class="image-container">
+            {% for image in images %}
+            <img src="{{ url_for('static', filename='manhwa/' + manhwa_name + '/' + chapter_name + '/' + image) }}" alt="Page {{ loop.index }}">
+            {% endfor %}
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            {% if prev_chapter %}
+            <a href="{{ url_for('view_images', manhwa_name=manhwa_name, chapter_name=prev_chapter) }}">⬅ Previous</a>
+            {% else %}
+            <a class="disabled">⬅ Previous</a>
+            {% endif %}
+
+            {% if next_chapter %}
+            <a href="{{ url_for('view_images', manhwa_name=manhwa_name, chapter_name=next_chapter) }}">Next ➡</a>
+            {% else %}
+            <a class="disabled">Next ➡</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function navigateToChapter() {
+            var selectedChapter = document.getElementById("chapter-select").value;
+            var manhwaName = "{{ manhwa_name }}";
+            window.location.href = "/view_images/" + manhwaName + "/" + selectedChapter;
+        }
+    </script>
+</body>
+
+</html>

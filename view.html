@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manhwa Details</title>
+  <style>
+    body {
+      font-family: "Open Sans", sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      max-width: 1300px;
+      gap: 20px;
+      align-items: flex-start;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .krish-ka-code {
+      display: flex;
+      width: 100%;
+      justify-content: space-evenly;
+      align-items: center;
+      gap: 60px;
+    }
+
+    .title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-align: left;
+      width: 80%;
+    }
+
+    .image-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .image-container picture {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 250px;
+      height: 350px;
+    }
+
+    .image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .details-box {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 750px;
+      height: 280px;
+    }
+
+    .cover {
+      width: 250px;
+      height: 350px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .details p {
+      margin: 12px 0;
+      font-size: 18px;
+    }
+
+    .highlight {
+      color: #ffcc00;
+      font-weight: bold;
+    }
+
+    .rating-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stars {
+      display: flex;
+      font-size: 22px;
+      color: #ffcc00;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    a.button {
+      background-color: #ffcc00;
+      color: #333;
+      text-decoration: none;
+      padding: 12px 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+      display: inline-block;
+    }
+
+    a.button:hover {
+      background-color: #e6b800;
+    }
+
+    .chapter-list {
+      margin-top: 20px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+    }
+
+    .chapter-list ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      /* Allows wrapping if needed */
+      gap: 15px;
+
+    }
+
+    .chapter-list li {
+      padding: 0;
+      border-bottom: none;
+    }
+
+    .chapter-list a {
+      text-decoration: none;
+      font-weight: bold;
+      color: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      /* Fixed width */
+      height: 50px;
+      /* Fixed height */
+      text-align: center;
+
+    }
+
+    .chapter-list a:hover {
+      color: #fff;
+      background-color: #e6b800;
+      transform: scale(1.05);
+    }
+
+
+    .plot-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      width: 800px;
+      word-spacing: 1px;
+    }
+
+    .toggle-button {
+      background-color: #ffcc00;
+      color: #333;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+
+    .toggle-button:hover {
+      background-color: #e6b800;
+    }
+
+    .breadcrumb {
+      margin-bottom: 15px;
+      font-size: 16px;
+      width: 80%;
+    }
+
+    .breadcrumb a {
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+    }
+
+    .breadcrumb span {
+      margin: 0 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="title">{{manhwa_name.replace("-"," ").title()}}</div>
+  <div class="breadcrumb">
+    <a href="{{ url_for('view_manhwas') }}">Home</a>
+    <span>/</span>
+    <a href="{{ url_for('view', manhwa_name=manhwa_name) }}">{{ manhwa_name.replace("-", " ").title() }}</a>
+    <span>/</span>
+  </div>
+  <div class="container">
+    <div class="krish-ka-code">
+      <div class="image-container">
+        <picture>
+          <img id="coverrr" src="{{ url_for('static', filename='manhwa/' + manhwa_name + '/cover.jpg') }}"
+            data-webp="{{ url_for('static', filename='manhwa/' + manhwa_name + '/cover.webp') }}"
+            data-jpg="{{ url_for('static', filename='manhwa/' + manhwa_name + '/cover.jpg') }}" alt="Manhwa Cover"
+            class="cover" />
+        </picture>
+      </div>
+      <div class="details-box">
+        <div class="details">
+          {% for key, value in details.items() %} {% if key != "Plot" %}
+          <p><span class="highlight">{{ key }}:</span> {{ value }}</p>
+          {% endif %} {% endfor %}
+        </div>
+        <div class="buttons">
+          <a class="button"
+            href="{{ url_for('view_images', manhwa_name=manhwa_name, chapter_name=first_chapter) }}">Read</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plot container is now inside the container -->
+    <div class="plot-container">
+      {% for key, value in details.items() %} {% if key == "Plot" %}
+      <p>
+        {{ value | replace('*-*', '<br /><br />')
+        | safe }}
+      </p>
+      {% endif %} {% endfor %}
+    </div>
+  </div>
+
+
+
+  <div class="chapter-list" id="chapterList">
+    <h2>Latest Releases</h2>
+    <ul>
+      {% for chapter in chapters %}
+      <li>
+        <a href="{{ url_for('view_images', manhwa_name=manhwa_name, chapter_name=chapter) }}" class="chapter-names">{{
+          chapter.replace("-"," ").title() }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll(".stars").forEach((starContainer) => {
+        let rating = parseFloat(starContainer.getAttribute("data-rating"));
+        let fullStars = Math.floor(rating);
+        let halfStar = rating % 1 >= 0.5;
+        let maxStars = 5; // Total stars
+
+        let starsHTML = "";
+        for (let i = 0; i < maxStars; i++) {
+          if (i < fullStars) {
+            starsHTML += `<span class="star full">&#9733;</span>`; // Full star
+          } else if (i === fullStars && halfStar) {
+            starsHTML += `<span class="star half">&#9733;</span>`; // Half star
+          } else {
+            starsHTML += `<span class="star empty">&#9733;</span>`; // Empty star
+          }
+        }
+        starContainer.innerHTML = starsHTML;
+      });
+    });
+
+    function getDominantColors(imageElement, callback) {
+      let canvas = document.createElement("canvas");
+      let ctx = canvas.getContext("2d");
+
+      imageElement.onload = function () {
+        canvas.width = imageElement.width;
+        canvas.height = imageElement.height;
+        ctx.drawImage(imageElement, 0, 0, canvas.width, canvas.height);
+
+        let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        let data = imageData.data;
+        let colorMap = new Map();
+
+        for (let i = 0; i < data.length; i += 20) {
+          // Reduce step size for better accuracy
+          let r = data[i],
+            g = data[i + 1],
+            b = data[i + 2];
+
+          // Ignore black, white, and near-black/near-white colors
+          if (
+            (r < 40 && g < 40 && b < 40) ||
+            (r > 215 && g > 215 && b > 215)
+          ) {
+            continue;
+          }
+
+          let color = `rgb(${r},${g},${b})`;
+          colorMap.set(color, (colorMap.get(color) || 0) + 1);
+        }
+
+        let sortedColors = [...colorMap.entries()].sort(
+          (a, b) => b[1] - a[1]
+        );
+
+        let dominantColor1 = sortedColors[0]
+          ? sortedColors[0][0]
+          : "rgb(255, 102, 0)";
+        let dominantColor2 = sortedColors[1]
+          ? sortedColors[1][0]
+          : "rgb(0, 153, 255)";
+
+        callback(dominantColor1, dominantColor2);
+      };
+
+      if (imageElement.complete) {
+        imageElement.onload();
+      }
+    }
+
+    function adjustTheme(color1, color2) {
+
+
+      // Check if `color1` is too light
+      if (isLightColor(color1)) {
+        color1 = "#2c3e50"; // Switch to a dark navy blue
+      }
+
+      // Check if `color2` is too light
+      if (isLightColor(color2)) {
+        color2 = "#34495e"; // Dark grayish blue
+      }
+
+      let heading = document.querySelectorAll(".title");
+      heading.forEach((head) => {
+        head.style.color = color1;
+      });
+
+      let highlight = document.querySelectorAll(".highlight");
+      highlight.forEach((high) => {
+        high.style.color = color1;
+      });
+
+      // Update Buttons
+      let buttons = document.querySelectorAll(".button");
+      buttons.forEach((btn) => {
+        btn.style.color = "#ffffff";
+        btn.style.backgroundColor = color1;
+      });
+
+      let names = document.querySelectorAll(".chapter-names");
+      names.forEach((name) => {
+        name.style.borderLeft = `4px solid ${color1}`;
+        name.style.transition = "border-left 0.3s ease-in-out, background-color 0.3s, color 0.3s";
+
+        // Mouse hover effect
+        name.addEventListener("mouseover", () => {
+          name.style.borderLeft = `4px solid ${color1}`;
+          name.style.backgroundColor = color1;
+          name.style.color = "#ffffff";
+        });
+
+        // Mouse out effect
+        name.addEventListener("mouseout", () => {
+          name.style.borderLeft = `4px solid ${color1}`;
+          name.style.backgroundColor = "white";
+          name.style.color = "black";
+        });
+      });
+
+    }
+
+    // Function to Check if a Color is Light
+    function isLightColor(hex) {
+      let num = parseInt(hex.replace("#", ""), 16);
+      let r = (num >> 16) & 0xff;
+      let g = (num >> 8) & 0xff;
+      let b = num & 0xff;
+      let brightness = (r * 299 + g * 587 + b * 114) / 1000; // Standard brightness formula
+      return brightness > 180; // If brightness is high, consider it light
+    }
+
+    // Ensure function gets called with extracted colors
+    document.addEventListener("DOMContentLoaded", function () {
+      let coverImage = document.getElementById("coverrr");
+      if (coverImage) {
+        getDominantColors(coverImage, adjustTheme);
+      }
+    });
+
+    // Ensure the function gets called with extracted colors
+    document.addEventListener("DOMContentLoaded", function () {
+      let coverImage = document.getElementById("coverrr");
+      if (coverImage) {
+        getDominantColors(coverImage, adjustTheme);
+      }
+    });
+
+    document.querySelectorAll("#coverrr").forEach((img) => {
+      const webpSrc = img.getAttribute("data-webp");
+      const jpgSrc = img.getAttribute("data-jpg");
+
+      if (webpSrc) {
+        const testImg = new Image();
+        testImg.src = webpSrc;
+
+        testImg.onload = function () {
+          img.src = webpSrc; // If webp loads, use it
+        };
+        testImg.onerror = function () {
+          img.src = jpgSrc; // If webp fails, use jpg
+        };
+      }
+    });
+
+  </script>
+</body>
+
+</html>

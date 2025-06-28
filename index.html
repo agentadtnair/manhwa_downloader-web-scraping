@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manhwa Viewer</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/48/cartoon-boy.png">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            color: #212529;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            font-weight: 800;
+            color: #ff5e6c;
+            text-shadow: 2px 2px 8px rgba(255, 94, 108, 0.2);
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .btn {
+            padding: 16px;
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 15px rgba(255, 94, 108, 0.3);
+        }
+        .btn:hover {
+            background: linear-gradient(135deg, #ff5e6c, #ff76a3);
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(255, 94, 108, 0.4);
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Manhwa Viewer</h1>
+        <div class="options">
+            <button class="btn" onclick="window.location.href='/view_manhwas'">Display Manhwas</button>
+            <button class="btn" onclick="window.location.href='/scrape'">Scrape Manhwas</button>
+        </div>
+    </div>
+</body>
+</html>

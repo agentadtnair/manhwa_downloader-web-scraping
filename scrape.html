@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrape Manhwa</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/48/cartoon-boy.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #1e1e2e;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        input {
+            width: 92%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            text-align: center;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        input:focus {
+            border: 2px solid #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3498db, #1abc9c);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.3s ease, transform 0.2s ease;
+            width: 48%;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #1abc9c, #3498db);
+            transform: scale(1.05);
+        }
+
+        #loader {
+            display: none;
+            margin: 20px auto;
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #response {
+            margin-top: 20px;
+            font-size: 18px;
+            padding: 15px;
+            border-radius: 8px;
+            min-width: 300px;
+            text-align: center;
+            background: transparent;
+            color: transparent;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        #response.visible {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Scrape Manhwa</h1>
+        <form id="scrapeForm">
+            <input type="text" id="manhwa_name" name="manhwa_name" placeholder="Enter Manhwa Name" required>
+            <div class="buttons">
+                <button type="submit">Scrape</button>
+                <button type="button" onclick="window.location.href='/'">Back to Home</button>
+            </div>
+        </form>
+        <div id="loader"></div>
+        <p id="response"></p>
+    </div>
+
+    <script>
+        document.getElementById("scrapeForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            let manhwaName = document.getElementById("manhwa_name").value;
+            let loader = document.getElementById("loader");
+            let responseBox = document.getElementById("response");
+
+            // Show loader and reset response
+            loader.style.display = "block";
+            responseBox.textContent = "";
+            responseBox.style.background = "rgba(255, 255, 255, 0)";
+            responseBox.style.color = "rgba(255, 255, 255, 0)";
+
+            fetch("/scrape", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `manhwa_name=${encodeURIComponent(manhwaName)}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    loader.style.display = "none";
+
+                    if (data.success) {
+                        responseBox.textContent = data.message;
+                        responseBox.style.background = "rgba(255, 255, 255, 0.1)";
+                        responseBox.style.color = "white";
+                    } else {
+                        responseBox.textContent = `Error: ${data.error}`;
+                        responseBox.style.background = "rgba(255, 0, 0, 0.3)";
+                        responseBox.style.color = "white";
+                    }
+                })
+                .catch(error => {
+                    loader.style.display = "none";
+                    responseBox.textContent = "An error occurred. Please try again.";
+                    responseBox.style.background = "rgba(255, 0, 0, 0.3)";
+                    responseBox.style.color = "white";
+                });
+        });
+    </script>
+</body>
+
+</html>
